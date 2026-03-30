@@ -1,7 +1,7 @@
 resource "aws_ssm_parameter" "ingress_sg_id" {
   name  = "/${var.project}/${var.environment}/ingress_sg_id"
   type  = "String"
-  value = module.ingress.sg_id
+  value = module.ingress_alb.sg_id
 }
 
 resource "aws_ssm_parameter" "bastion_sg_id" {
