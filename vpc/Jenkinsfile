@@ -24,11 +24,13 @@ pipeline {
          stage('plan'){
             steps {
                 script {
-                    withAWS(credentials: 'aws-credentials', region: 'us-east-1')
+                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
                       sh """
                         cd vpc
                         terraform plan
                       """
+                    }
+                    
                 }
             }
         }
@@ -40,11 +42,14 @@ pipeline {
             }
             steps {
                 script {
-                    withAWS(credentials: 'aws-credentials', region: 'us-east-1')
+                    withAWS(credentials: 'aws-credentials', region: 'us-east-1'){
+
+                    
                       sh """
                         cd vpc
                         terraform apply -auto-approve
                       """
+                    }
                 }
             }
         }
