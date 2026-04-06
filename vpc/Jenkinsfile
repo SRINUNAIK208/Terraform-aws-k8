@@ -35,11 +35,11 @@ pipeline {
             }
         }
          stage('apply'){
-            input {
-                message "should we continue"
-                ok "Yes, we should"
-                submitter "alice,bob"
-            }
+            // input {
+            //     message "should we continue"
+            //     ok "Yes, we should"
+            //     submitter "alice,bob"
+            // }
             steps {
                 script {
                     withAWS(credentials: 'aws-credentials', region: 'us-east-1'){
@@ -50,6 +50,15 @@ pipeline {
                         terraform apply -auto-approve
                       """
                     }
+                }
+            }
+        }
+        stage('Trigger sg') {
+            steps {
+                script {
+                    build job: 'sg'
+                    propagate: false,  // even SG fails VPC will not be effected
+                    wait: false // VPC will not wait for SG pipeline completion
                 }
             }
         }
