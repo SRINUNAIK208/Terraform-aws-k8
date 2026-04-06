@@ -44,5 +44,53 @@ pipeline {
                 }
             }
         }
+        stage('bastion eks acm'){
+            parallel {
+              stage('trigger bastion'){
+                steps{
+                    script {
+                       build job: 'bastion',
+                       propagate: false,
+                       wait: false
+                    }
+
+                 }
+              }
+               stage('trigger eks'){
+                 steps{
+                    script {
+                       build job: 'eks',
+                       propagate: false,
+                       wait: false
+                    }
+
+                 }
+              }
+              stage('ACM alb') {
+                 stages {
+                    stage('ACM') {
+                        steps {
+                            script {
+                              build job: 'ACM',
+                              propagate: false,
+                              wait: false
+                            }
+                        }
+                    }
+                    stage('alb') {
+                        steps {
+                            script {
+                              build job: 'alb',
+                              propagate: false,
+                              wait: false
+                            }
+                        }
+                    }
+                 }
+              }
+               
+            }
+
+        }
     }
 }
